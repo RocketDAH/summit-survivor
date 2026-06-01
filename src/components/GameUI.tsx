@@ -156,22 +156,85 @@ export default function GameUI() {
         fontSize: '18px'
       }}>
         <div>HP: {hp}/{maxHp}</div>
-        <div>시간: {timeLeft}초</div>
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '10px'
+        }}>
+          <span>⏱️ {Math.floor(timeLeft / 60)}:{String(timeLeft % 60).padStart(2, '0')}</span>
+          <div style={{
+            width: '60px',
+            height: '6px',
+            backgroundColor: '#0f3460',
+            borderRadius: '3px',
+            overflow: 'hidden'
+          }}>
+            <div style={{
+              width: `${(timeLeft / 120) * 100}%`,
+              height: '100%',
+              backgroundColor: timeLeft > 30 ? '#4CAF50' : timeLeft > 10 ? '#FF9800' : '#f44336',
+              transition: 'width 1s linear, background-color 0.3s'
+            }} />
+          </div>
+        </div>
         <div>점수: {score}</div>
       </div>
 
       <div style={{
         backgroundColor: '#16213e',
-        padding: '10px',
+        padding: '15px',
         borderRadius: '8px',
-        marginBottom: '20px'
+        marginBottom: '20px',
+        textAlign: 'center'
       }}>
-        <div style={{ marginBottom: '5px' }}>진행도: {progress}/{maxProgress}m</div>
+        <div style={{ marginBottom: '10px', fontSize: '16px' }}>🏔️ 정상까지: {maxProgress - progress}m 남음</div>
+
+        <div style={{
+          position: 'relative',
+          width: '100%',
+          height: '80px',
+          background: 'linear-gradient(to top, #2d5016 0%, #4a7c59 50%, #87ceeb 80%, #ffffff 100%)',
+          borderRadius: '10px',
+          overflow: 'hidden',
+          marginBottom: '10px'
+        }}>
+          <div style={{
+            position: 'absolute',
+            bottom: `${(progress/maxProgress)*100}%`,
+            left: '50%',
+            transform: 'translateX(-50%)',
+            fontSize: '20px',
+            transition: 'bottom 0.5s ease-out'
+          }}>
+            🧗‍♀️
+          </div>
+
+          <div style={{
+            position: 'absolute',
+            top: '5px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            fontSize: '16px'
+          }}>
+            🎯
+          </div>
+
+          <div style={{
+            position: 'absolute',
+            bottom: '5px',
+            right: '5px',
+            fontSize: '12px',
+            color: '#fff'
+          }}>
+            {Math.round((progress/maxProgress)*100)}%
+          </div>
+        </div>
+
         <div style={{
           width: '100%',
-          height: '20px',
+          height: '8px',
           backgroundColor: '#0f3460',
-          borderRadius: '10px',
+          borderRadius: '4px',
           overflow: 'hidden'
         }}>
           <div style={{
@@ -180,6 +243,10 @@ export default function GameUI() {
             backgroundColor: '#4CAF50',
             transition: 'width 0.3s'
           }} />
+        </div>
+
+        <div style={{ marginTop: '5px', fontSize: '14px', color: '#ccc' }}>
+          {progress}/{maxProgress}m
         </div>
       </div>
 

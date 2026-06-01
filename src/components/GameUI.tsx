@@ -14,6 +14,7 @@ export default function GameUI() {
     timeLeft,
     score,
     currentEvent,
+    lastResult,
     startGame,
     updateHp,
     updateTime,
@@ -39,7 +40,8 @@ export default function GameUI() {
     }, 1500)
 
     gameTimerRef.current = setInterval(() => {
-      updateTime(timeLeft - 1)
+      const currentTime = useGameStore.getState().timeLeft
+      updateTime(currentTime - 1)
     }, 1000)
   }
 
@@ -103,7 +105,8 @@ export default function GameUI() {
   }
 
   if (gameOver) {
-    const isVictory = progress >= maxProgress
+    const isVictory = progress >= maxProgress || timeLeft <= 0
+    const victoryType = progress >= maxProgress ? 'summit' : 'survival'
     return (
       <div style={{
         display: 'flex',
@@ -115,9 +118,14 @@ export default function GameUI() {
         color: '#eee'
       }}>
         <h1 style={{ fontSize: '36px', marginBottom: '20px' }}>
-          {isVictory ? '🎉 정상 도달!' : '💀 게임 오버'}
+          {isVictory
+            ? (victoryType === 'summit' ? '🏔️ 정상 정복!' : '⏰ 생존 성공!')
+            : '💀 게임 오버'
+          }
         </h1>
         <div style={{ fontSize: '18px', textAlign: 'center', marginBottom: '30px' }}>
+          {isVictory && victoryType === 'summit' && <p>🎉 3,000m 정상에 도달했습니다!</p>}
+          {isVictory && victoryType === 'survival' && <p>🎉 2분간 생존에 성공했습니다!</p>}
           <p>최종 점수: {score}점</p>
           <p>진행도: {progress}/{maxProgress}m ({Math.round(progress/maxProgress*100)}%)</p>
           <p>생존 시간: {120-timeLeft}초</p>
@@ -272,6 +280,21 @@ export default function GameUI() {
           }} />
         </div>
       </div>
+
+      {lastResult && (
+        <div style={{
+          backgroundColor: '#d4af37',
+          color: '#000',
+          padding: '15px',
+          borderRadius: '8px',
+          marginBottom: '15px',
+          fontWeight: 'bold',
+          textAlign: 'center',
+          animation: 'fadeIn 0.5s ease-in-out'
+        }}>
+          {lastResult}
+        </div>
+      )}
 
       {currentEvent && (
         <div style={{

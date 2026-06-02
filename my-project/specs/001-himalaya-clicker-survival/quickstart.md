@@ -3,7 +3,7 @@
 **Feature**: 001-himalaya-clicker-survival
 **Date**: 2026-06-02
 
-이 문서는 개발 환경 설정부터 로컬 실행까지의 빠른 시작 가이드입니다.
+이 문서는 개발 환경 설정부터 로컬 실행 및 배포까지의 빠른 시작 가이드입니다.
 
 ---
 
@@ -11,8 +11,9 @@
 
 - Node.js 20.x 이상
 - pnpm (권장) 또는 npm
-- PostgreSQL 15+ (리더보드용, Docker 권장)
 - Git
+- Supabase 계정 (무료)
+- Vercel 계정 (무료, 배포용)
 
 ---
 
@@ -28,166 +29,166 @@ pnpm install
 
 ---
 
-## 2. Frontend Setup
+## 2. Supabase 프로젝트 생성
+
+### 2.1 Supabase 프로젝트 생성
+
+1. [Supabase](https://supabase.com) 접속 및 로그인
+2. "New Project" 클릭
+3. 프로젝트 정보 입력:
+   - Name: `summit-survivor`
+   - Database Password: 안전한 비밀번호 생성 (저장 필수)
+   - Region: `Northeast Asia (Seoul)` 권장
+4. "Create new project" 클릭 (1-2분 소요)
+
+### 2.2 데이터베이스 테이블 생성
+
+Supabase 대시보드 → SQL Editor에서 다음 쿼리 실행:
+
+```sql
+-- scores 테이블 생성
+CREATE TABLE scores (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  player_name VARCHAR(50) NOT NULL,
+  items_collected INTEGER NOT NULL CHECK (items_collected >= 0),
+  survival_time_seconds INTEGER NOT NULL CHECK (survival_time_seconds >= 0 AND survival_time_seconds <= 120),
+  remaining_hp INTEGER NOT NULL CHECK (remaining_hp >= 0 AND remaining_hp <= 100),
+  altitude INTEGER NOT NULL CHECK (altitude >= 0 AND altitude <= 3000),
+  cleared BOOLEAN NOT NULL DEFAULT false,
+  score INTEGER NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- 점수 기준 인덱스
+CREATE INDEX idx_scores_score ON scores(score DESC);
+CREATE INDEX idx_scores_player ON scores(player_name);
+
+-- Row Level Security 활성화
+ALTER TABLE scores ENABLE ROW LEVEL SECURITY;
+
+-- 모든 사용자가 읽기 가능
+CREATE POLICY "Anyone can view scores"
+  ON scores FOR SELECT
+  USING (true);
+
+-- 모든 사용자가 점수 제출 가능
+CREATE POLICY "Anyone can insert scores"
+  ON scores FOR INSERT
+  WITH CHECK (true);
+```
+
+### 2.3 환경 변수 설정
+
+Supabase 대시보드 → Settings → API에서 다음 값 복사:
+
+- Project URL: `https://xxxxx.supabase.co`
+- `anon` `public` key
+
+루트 디렉토리에 `.env.local` 파일 생성:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=https://xxxxx.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key_here
+```
+
+---
+
+## 3. 로컬 개발 서버 실행
 
 ```bash
-# frontend 디렉토리로 이동
-cd frontend
-
-# 의존성 설치
-pnpm install
-
 # 개발 서버 시작
 pnpm dev
 ```
 
-**접속**: http://localhost:5173
+**접속**: http://localhost:3000
 
-### Frontend 환경 변수
-
-`.env.local` 파일 생성:
-```env
-VITE_API_URL=http://localhost:3000/api
-```
+Next.js가 자동으로:
+- 게임 페이지 제공
+- API Routes 실행 (`/api/*`)
+- Hot Reload 지원
 
 ---
 
-## 3. Backend Setup
+## 4. 테스트 실행
 
 ```bash
-# backend 디렉토리로 이동
-cd backend
-
-# 의존성 설치
-pnpm install
-
-# 환경 변수 설정
-cp .env.example .env
-```
-
-### Backend 환경 변수
-
-`.env` 파일 편집:
-```env
-DATABASE_URL="postgresql://postgres:postgres@localhost:5432/summit_survivor"
-PORT=3000
-NODE_ENV=development
-```
-
-### Database Setup
-
-```bash
-# Docker로 PostgreSQL 실행
-docker run --name summit-db \
-  -e POSTGRES_PASSWORD=postgres \
-  -e POSTGRES_DB=summit_survivor \
-  -p 5432:5432 \
-  -d postgres:15
-
-# Prisma 마이그레이션 실행
-pnpm prisma migrate dev
-
-# (선택) Prisma Studio로 DB 확인
-pnpm prisma studio
-```
-
-### 서버 시작
-
-```bash
-pnpm dev
-```
-
-**API 접속**: http://localhost:3000
-
----
-
-## 4. 전체 실행 (동시 실행)
-
-루트 디렉토리에서:
-
-```bash
-# 모든 서비스 동시 실행 (turbo 또는 concurrently 사용)
-pnpm dev
-```
-
-또는 별도 터미널에서:
-```bash
-# Terminal 1: Frontend
-cd frontend && pnpm dev
-
-# Terminal 2: Backend
-cd backend && pnpm dev
-```
-
----
-
-## 5. 테스트 실행
-
-```bash
-# Frontend 테스트
-cd frontend && pnpm test
-
-# Backend 테스트
-cd backend && pnpm test
-
-# 전체 테스트 (루트)
+# 통합 테스트
 pnpm test
+
+# 타입 체크
+pnpm typecheck
+
+# 린트
+pnpm lint
 ```
 
 ---
 
-## 6. 빌드 및 배포
+## 5. 빌드 및 배포
 
-### Frontend (Vercel)
-
-```bash
-cd frontend
-pnpm build
-# dist/ 폴더가 생성됨
-```
-
-Vercel 설정:
-- Build Command: `pnpm build`
-- Output Directory: `dist`
-- Environment Variables: `VITE_API_URL` 설정
-
-### Backend (Render/Railway)
+### 로컬 프로덕션 빌드
 
 ```bash
-cd backend
+# 프로덕션 빌드
 pnpm build
+
+# 프로덕션 서버 실행
 pnpm start
 ```
 
-환경 변수:
-- `DATABASE_URL`: 프로덕션 PostgreSQL URL
-- `NODE_ENV`: `production`
+### Vercel 배포
+
+#### 방법 1: Vercel CLI (권장)
+
+```bash
+# Vercel CLI 설치
+pnpm add -g vercel
+
+# 로그인
+vercel login
+
+# 배포
+vercel
+```
+
+#### 방법 2: GitHub 연동 (자동 배포)
+
+1. GitHub에 프로젝트 푸시
+2. [Vercel](https://vercel.com) 대시보드 접속
+3. "Add New Project" 클릭
+4. GitHub 저장소 선택
+5. 환경 변수 설정:
+   - `NEXT_PUBLIC_SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+6. "Deploy" 클릭
+
+**자동 배포**: 이후 `main` 브랜치에 푸시하면 자동으로 배포됨
 
 ---
 
-## 7. 개발 워크플로우
+## 6. 개발 워크플로우
 
 ### 게임 로직 수정
 
-1. `frontend/src/stores/gameStore.ts` - 게임 상태 및 로직
-2. `frontend/src/data/items.ts` - 아이템 정의
-3. `frontend/src/utils/score.ts` - 점수 계산
+1. `stores/gameStore.ts` - 게임 상태 및 로직
+2. `data/items.ts` - 아이템 정의
+3. `lib/score.ts` - 점수 계산
 
 ### UI 수정
 
-1. `frontend/src/components/Game/` - 게임 화면
-2. `frontend/src/components/Screens/` - 메인/결과 화면
-3. `frontend/src/components/UI/` - 공통 컴포넌트
+1. `components/game/` - 게임 화면
+2. `components/screens/` - 메인/결과 화면
+3. `components/ui/` - 공통 컴포넌트
 
 ### API 수정
 
-1. `backend/src/routes/leaderboard.ts` - API 라우트
-2. `backend/src/services/scoreService.ts` - 점수 검증/계산
-3. `backend/prisma/schema.prisma` - DB 스키마
+1. `app/api/scores/route.ts` - 점수 제출 API
+2. `app/api/leaderboard/route.ts` - 리더보드 조회 API
+3. `lib/supabase.ts` - Supabase 클라이언트
 
 ---
 
-## 8. 유용한 명령어
+## 7. 유용한 명령어
 
 ```bash
 # 타입 체크
@@ -199,11 +200,10 @@ pnpm lint
 # 포맷팅
 pnpm format
 
-# Prisma 클라이언트 재생성
-cd backend && pnpm prisma generate
-
-# DB 초기화 (주의: 데이터 삭제됨)
-cd backend && pnpm prisma migrate reset
+# Supabase 로컬 개발 (선택)
+npx supabase init
+npx supabase start
+npx supabase db reset
 ```
 
 ---
@@ -213,28 +213,33 @@ cd backend && pnpm prisma migrate reset
 ### "Port already in use"
 ```bash
 # 프로세스 확인 및 종료
-lsof -i :5173  # Frontend
-lsof -i :3000  # Backend
+lsof -i :3000
 kill -9 <PID>
 ```
 
-### "Database connection failed"
+### "Supabase connection failed"
 ```bash
-# PostgreSQL 컨테이너 확인
-docker ps
-docker logs summit-db
+# .env.local 파일 확인
+cat .env.local
 
-# 연결 테스트
-psql postgresql://postgres:postgres@localhost:5432/summit_survivor
+# Supabase 프로젝트 상태 확인 (대시보드)
+# https://supabase.com/dashboard/project/YOUR_PROJECT_ID
 ```
 
-### "Prisma migration failed"
+### "API route not found"
 ```bash
-# 마이그레이션 상태 확인
-pnpm prisma migrate status
+# Next.js 캐시 삭제
+rm -rf .next
+pnpm dev
+```
 
-# 강제 리셋 (개발 환경만)
-pnpm prisma migrate reset --force
+### "Environment variables not loading"
+```bash
+# .env.local 파일이 루트에 있는지 확인
+ls -la .env.local
+
+# 서버 재시작 필요 (환경 변수 변경 시)
+# Ctrl+C 후 pnpm dev 재실행
 ```
 
 ---
@@ -244,3 +249,5 @@ pnpm prisma migrate reset --force
 1. `/speckit-tasks` 실행하여 구현 태스크 생성
 2. P1 User Story부터 구현 시작
 3. 테스트 작성 및 실행
+4. Vercel Preview 배포로 테스트
+5. Production 배포

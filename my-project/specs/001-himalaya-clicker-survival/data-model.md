@@ -98,45 +98,117 @@ victory/defeat → idle (restart)
 
 ---
 
-## Backend Database (PostgreSQL)
+## Backend Database (Supabase PostgreSQL)
 
-### LeaderboardEntry
+### scores 테이블
 
-리더보드 엔트리
+리더보드 엔트리 저장
 
 | Column | Type | Constraints | Description |
 |--------|------|-------------|-------------|
-| id | `UUID` | PRIMARY KEY | 고유 식별자 |
+| id | `UUID` | PRIMARY KEY, DEFAULT gen_random_uuid() | 고유 식별자 |
 | player_name | `VARCHAR(50)` | NOT NULL | 플레이어 이름 |
 | score | `INTEGER` | NOT NULL | 최종 점수 |
-| altitude | `INTEGER` | NOT NULL | 도달 고도 |
-| cleared | `BOOLEAN` | NOT NULL | 정상 도달 여부 |
-| survival_time | `INTEGER` | NOT NULL | 생존 시간 (초) |
-| items_collected | `INTEGER` | NOT NULL | 획득 아이템 수 |
-| remaining_hp | `INTEGER` | NOT NULL | 남은 HP |
-| created_at | `TIMESTAMP` | DEFAULT NOW() | 기록 시간 |
+| altitude | `INTEGER` | NOT NULL, CHECK (0 <= altitude <= 3000) | 도달 고도 |
+| cleared | `BOOLEAN` | NOT NULL, DEFAULT false | 정상 도달 여부 |
+| survival_time_seconds | `INTEGER` | NOT NULL, CHECK (0 <= survival_time_seconds <= 120) | 생존 시간 (초) |
+| items_collected | `INTEGER` | NOT NULL, CHECK (items_collected >= 0) | 획득 아이템 수 |
+| remaining_hp | `INTEGER` | NOT NULL, CHECK (0 <= remaining_hp <= 100) | 남은 HP |
+| created_at | `TIMESTAMPTZ` | DEFAULT NOW() | 기록 시간 |
 
 **Indexes**:
-- `idx_leaderboard_score` on (score DESC)
-- `idx_leaderboard_player` on (player_name)
+- `idx_scores_score` on (score DESC)
+- `idx_scores_player` on (player_name)
 
-**Prisma Schema**:
-```prisma
-model LeaderboardEntry {
-  id             String   @id @default(uuid())
-  playerName     String   @map("player_name") @db.VarChar(50)
-  score          Int
-  altitude       Int
-  cleared        Boolean
-  survivalTime   Int      @map("survival_time")
-  itemsCollected Int      @map("items_collected")
-  remainingHp    Int      @map("remaining_hp")
-  createdAt      DateTime @default(now()) @map("created_at")
+**Row Level Security (RLS)**:
+- SELECT: 모든 사용자 허용 (리더보드 조회)
+- INSERT: 모든 사용자 허용 (점수 제출)
 
-  @@index([score(sort: Desc)])
-  @@index([playerName])
-  @@map("leaderboard_entries")
+**SQL Schema** (Supabase SQL Editor에서 실행):
+```sql
+-- scores 테이블 생성
+CREATE TABLE scores (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  player_name VARCHAR(50) NOT NULL,
+  items_collected INTEGER NOT NULL CHECK (items_collected >= 0),
+  survival_time_seconds INTEGER NOT NULL CHECK (survival_time_seconds >= 0 AND survival_time_seconds <= 120),
+  remaining_hp INTEGER NOT NULL CHECK (remaining_hp >= 0 AND remaining_hp <= 100),
+  altitude INTEGER NOT NULL CHECK (altitude >= 0 AND altitude <= 3000),
+  cleared BOOLEAN NOT NULL DEFAULT false,
+  score INTEGER NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- 점수 기준 인덱스 (내림차순)
+CREATE INDEX idx_scores_score ON scores(score DESC);
+
+-- 플레이어 이름 기준 인덱스
+CREATE INDEX idx_scores_player ON scores(player_name);
+
+-- Row Level Security 활성화
+ALTER TABLE scores ENABLE ROW LEVEL SECURITY;
+
+-- 모든 사용자가 점수 조회 가능
+CREATE POLICY "Anyone can view scores"
+  ON scores FOR SELECT
+  USING (true);
+
+-- 모든 사용자가 점수 제출 가능
+CREATE POLICY "Anyone can insert scores"
+  ON scores FOR INSERT
+  WITH CHECK (true);
+```
+
+**TypeScript Types** (Supabase에서 자동 생성):
+```typescript
+export interface Score {
+  id: string;
+  player_name: string;
+  score: number;
+  altitude: number;
+  cleared: boolean;
+  survival_time_seconds: number;
+  items_collected: number;
+  remaining_hp: number;
+  created_at: string;
 }
+
+export interface ScoreInsert {
+  player_name: string;
+  items_collected: number;
+  survival_time_seconds: number;
+  remaining_hp: number;
+  altitude: number;
+  cleared: boolean;
+  score: number;
+}
+```
+
+**Usage Example**:
+```typescript
+import { createClient } from '@/lib/supabase';
+
+// 점수 제출
+const { data, error } = await createClient()
+  .from('scores')
+  .insert({
+    player_name: '산악인',
+    score: 750,
+    altitude: 3000,
+    cleared: true,
+    survival_time_seconds: 100,
+    items_collected: 20,
+    remaining_hp: 50
+  })
+  .select()
+  .single();
+
+// 리더보드 조회
+const { data: leaderboard } = await createClient()
+  .from('scores')
+  .select('*')
+  .order('score', { ascending: false })
+  .limit(100);
 ```
 
 ---
@@ -176,7 +248,7 @@ interface ScoreBreakdown {
 
 ```
 ┌─────────────────┐
-│   GameState     │ (Frontend - Runtime)
+│   GameState     │ (Frontend - Zustand Store)
 │─────────────────│
 │ • status        │
 │ • hp            │
@@ -186,14 +258,20 @@ interface ScoreBreakdown {
 │ • score         │
 └────────┬────────┘
          │
-         │ Game Over
+         │ Game Over (API Request)
          ▼
 ┌─────────────────┐
-│ LeaderboardEntry│ (Backend - Persistent)
+│  scores table   │ (Supabase - PostgreSQL)
 │─────────────────│
-│ • playerName    │
+│ • player_name   │
 │ • score         │
 │ • altitude      │
 │ • cleared       │
 └─────────────────┘
 ```
+
+**Data Flow**:
+1. **게임 플레이** (클라이언트): GameState에서 모든 로직 실행
+2. **게임 종료**: 점수 계산 후 `POST /api/scores`로 제출
+3. **API Route**: Next.js API Route에서 점수 검증 및 Supabase에 저장
+4. **리더보드 조회**: `GET /api/leaderboard`로 Supabase에서 데이터 조회

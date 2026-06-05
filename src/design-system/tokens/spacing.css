@@ -1,0 +1,62 @@
+/* 
+ * Spacing Tokens
+ * 8px 그리드 기반 시스템
+ */
+
+:root {
+  /* === Spacing Scale === */
+  --space-0: 0px;
+  --space-1: 4px;   /* 0.5 unit */
+  --space-2: 8px;   /* 1 unit */
+  --space-3: 12px;  /* 1.5 unit */
+  --space-4: 16px;  /* 2 unit */
+  --space-5: 24px;  /* 3 unit */
+  --space-6: 32px;  /* 4 unit */
+  --space-7: 48px;  /* 6 unit */
+  --space-8: 64px;  /* 8 unit */
+
+  /* === Border Radius (Pixel-friendly) === */
+  --radius-none: 0;
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 8px;
+
+  /* === Border Width === */
+  --border-thin: 1px;
+  --border-normal: 2px;
+  --border-thick: 4px;
+
+  /* === Responsive Breakpoints === */
+  --bp-mobile: 480px;
+  --bp-tablet: 768px;
+  --bp-desktop: 1024px;
+  --bp-wide: 1440px;
+
+  /* === Pixel Scale === */
+  --pixel-scale: 2;
+}
+
+/* Responsive Pixel Scale */
+@media (max-width: 480px) {
+  :root {
+    --pixel-scale: 1;
+  }
+}
+
+@media (min-width: 481px) and (max-width: 768px) {
+  :root {
+    --pixel-scale: 2;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  :root {
+    --pixel-scale: 2;
+  }
+}
+
+@media (min-width: 1025px) {
+  :root {
+    --pixel-scale: 3;
+  }
+}

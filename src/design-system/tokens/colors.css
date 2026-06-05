@@ -1,0 +1,43 @@
+/* 
+ * Color Tokens
+ * 히말라야 테마 색상 팔레트
+ */
+
+:root {
+  /* === Base Colors === */
+  --color-primary: #1a3a5c;
+  --color-primary-light: #2d5a87;
+  --color-primary-dark: #0d1f33;
+  --color-secondary: #e8f4fc;
+  --color-background: #0a1628;
+  --color-surface: #152238;
+  --color-accent: #ffd700;
+
+  /* === Semantic Colors - Item Types === */
+  --color-positive: #4ade80;
+  --color-positive-dark: #22c55e;
+  --color-negative: #ef4444;
+  --color-negative-dark: #dc2626;
+  --color-random: #a855f7;
+  --color-random-alt: #facc15;
+
+  /* === HP State Colors === */
+  --color-hp-high: #4ade80;
+  --color-hp-medium: #facc15;
+  --color-hp-low: #ef4444;
+  --color-hp-critical: #991b1b;
+
+  /* === UI Colors === */
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #94a3b8;
+  --color-text-disabled: #475569;
+  --color-border: #334155;
+  --color-border-accent: #ffd700;
+
+  /* === Shadow Colors === */
+  --color-shadow: rgba(0, 0, 0, 0.5);
+  --color-glow-positive: rgba(74, 222, 128, 0.4);
+  --color-glow-negative: rgba(239, 68, 68, 0.4);
+  --color-glow-random: rgba(168, 85, 247, 0.4);
+  --color-glow-accent: rgba(255, 215, 0, 0.4);
+}

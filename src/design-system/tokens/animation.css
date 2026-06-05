@@ -1,0 +1,19 @@
+/* 
+ * Animation Tokens
+ * 픽셀 애니메이션 시스템
+ */
+
+:root {
+  /* === Duration === */
+  --duration-instant: 50ms;
+  --duration-fast: 100ms;
+  --duration-normal: 200ms;
+  --duration-slow: 300ms;
+  --duration-event: 1500ms;
+
+  /* === Easing Functions === */
+  --ease-step: steps(4);
+  --ease-step-smooth: steps(8);
+  --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --ease-linear: linear;
+}

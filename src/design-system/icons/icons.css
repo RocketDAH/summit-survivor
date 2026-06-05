@@ -1,0 +1,89 @@
+/* 
+ * Icon System
+ * 픽셀 아이콘 스프라이트 클래스
+ */
+
+/* === Base Icon Class === */
+.pixel-icon {
+  display: inline-block;
+  background-repeat: no-repeat;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  vertical-align: middle;
+}
+
+/* === Icon Sizes === */
+.pixel-icon--sm {
+  width: 16px;
+  height: 16px;
+  background-image: url('./sprite-16.png');
+}
+
+.pixel-icon--md {
+  width: 32px;
+  height: 32px;
+  background-image: url('./sprite-32.png');
+}
+
+.pixel-icon--lg {
+  width: 48px;
+  height: 48px;
+  background-image: url('./sprite-48.png');
+}
+
+/* === Positive Items (Row 0) === */
+.pixel-icon--food.pixel-icon--sm { background-position: 0 0; }
+.pixel-icon--food.pixel-icon--md { background-position: 0 0; }
+.pixel-icon--food.pixel-icon--lg { background-position: 0 0; }
+
+.pixel-icon--water.pixel-icon--sm { background-position: -16px 0; }
+.pixel-icon--water.pixel-icon--md { background-position: -32px 0; }
+.pixel-icon--water.pixel-icon--lg { background-position: -48px 0; }
+
+.pixel-icon--tent.pixel-icon--sm { background-position: -32px 0; }
+.pixel-icon--tent.pixel-icon--md { background-position: -64px 0; }
+.pixel-icon--tent.pixel-icon--lg { background-position: -96px 0; }
+
+/* === Negative Items (Row 1) === */
+.pixel-icon--rockfall.pixel-icon--sm { background-position: 0 -16px; }
+.pixel-icon--rockfall.pixel-icon--md { background-position: 0 -32px; }
+.pixel-icon--rockfall.pixel-icon--lg { background-position: 0 -48px; }
+
+.pixel-icon--storm.pixel-icon--sm { background-position: -16px -16px; }
+.pixel-icon--storm.pixel-icon--md { background-position: -32px -32px; }
+.pixel-icon--storm.pixel-icon--lg { background-position: -48px -48px; }
+
+.pixel-icon--injury.pixel-icon--sm { background-position: -32px -16px; }
+.pixel-icon--injury.pixel-icon--md { background-position: -64px -32px; }
+.pixel-icon--injury.pixel-icon--lg { background-position: -96px -48px; }
+
+/* === Random Items (Row 2) === */
+.pixel-icon--treasure.pixel-icon--sm { background-position: 0 -32px; }
+.pixel-icon--treasure.pixel-icon--md { background-position: 0 -64px; }
+.pixel-icon--treasure.pixel-icon--lg { background-position: 0 -96px; }
+
+.pixel-icon--mushroom.pixel-icon--sm { background-position: -16px -32px; }
+.pixel-icon--mushroom.pixel-icon--md { background-position: -32px -64px; }
+.pixel-icon--mushroom.pixel-icon--lg { background-position: -48px -96px; }
+
+.pixel-icon--unknown.pixel-icon--sm { background-position: -32px -32px; }
+.pixel-icon--unknown.pixel-icon--md { background-position: -64px -64px; }
+.pixel-icon--unknown.pixel-icon--lg { background-position: -96px -96px; }
+
+/* === Status Icons (Row 3) === */
+.pixel-icon--hp.pixel-icon--sm { background-position: 0 -48px; }
+.pixel-icon--hp.pixel-icon--md { background-position: 0 -96px; }
+.pixel-icon--hp.pixel-icon--lg { background-position: 0 -144px; }
+
+.pixel-icon--timer.pixel-icon--sm { background-position: -16px -48px; }
+.pixel-icon--timer.pixel-icon--md { background-position: -32px -96px; }
+.pixel-icon--timer.pixel-icon--lg { background-position: -48px -144px; }
+
+.pixel-icon--altitude.pixel-icon--sm { background-position: -32px -48px; }
+.pixel-icon--altitude.pixel-icon--md { background-position: -64px -96px; }
+.pixel-icon--altitude.pixel-icon--lg { background-position: -96px -144px; }
+
+/* === Icon Color Filters (for SVG icons or when needed) === */
+.pixel-icon--positive { filter: drop-shadow(0 0 2px var(--color-glow-positive)); }
+.pixel-icon--negative { filter: drop-shadow(0 0 2px var(--color-glow-negative)); }
+.pixel-icon--random { filter: drop-shadow(0 0 2px var(--color-glow-random)); }

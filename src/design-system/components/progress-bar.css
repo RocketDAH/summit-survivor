@@ -1,0 +1,160 @@
+/* 
+ * Progress Bar Component
+ * .pixel-progress
+ */
+
+.pixel-progress {
+  position: relative;
+  width: 100%;
+  height: 24px;
+  background-color: var(--color-surface);
+  border: var(--border-normal) solid var(--color-border);
+  overflow: hidden;
+  
+  /* Pixel look */
+  box-shadow: 
+    inset 2px 2px 0 rgba(0, 0, 0, 0.3),
+    inset -2px -2px 0 rgba(255, 255, 255, 0.05);
+}
+
+.pixel-progress__fill {
+  height: 100%;
+  transition: width var(--duration-normal) var(--ease-step);
+  
+  /* Pixel inner highlight */
+  box-shadow: 
+    inset -2px -2px 0 rgba(0, 0, 0, 0.2),
+    inset 2px 2px 0 rgba(255, 255, 255, 0.2);
+}
+
+.pixel-progress__label {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-primary);
+  text-shadow: 1px 1px 0 var(--color-shadow);
+  z-index: 1;
+}
+
+/* === Size Variants === */
+.pixel-progress--sm {
+  height: 16px;
+}
+
+.pixel-progress--sm .pixel-progress__label {
+  font-size: 8px;
+}
+
+.pixel-progress--lg {
+  height: 32px;
+}
+
+.pixel-progress--lg .pixel-progress__label {
+  font-size: var(--text-sm);
+}
+
+/* === HP Variant === */
+.pixel-progress--hp .pixel-progress__fill {
+  background-color: var(--color-hp-high);
+}
+
+.pixel-progress--hp[data-hp-state="high"] .pixel-progress__fill {
+  background-color: var(--color-hp-high);
+}
+
+.pixel-progress--hp[data-hp-state="medium"] .pixel-progress__fill {
+  background-color: var(--color-hp-medium);
+}
+
+.pixel-progress--hp[data-hp-state="low"] .pixel-progress__fill {
+  background-color: var(--color-hp-low);
+}
+
+.pixel-progress--hp[data-hp-state="critical"] .pixel-progress__fill {
+  background-color: var(--color-hp-critical);
+  animation: pulse-critical 0.5s var(--ease-linear) infinite;
+}
+
+/* === Altitude Variant === */
+.pixel-progress--altitude .pixel-progress__fill {
+  background: linear-gradient(
+    90deg,
+    var(--color-primary) 0%,
+    var(--color-primary-light) 50%,
+    var(--color-accent) 100%
+  );
+}
+
+.pixel-progress--altitude[data-near-summit="true"] .pixel-progress__fill {
+  background: linear-gradient(
+    90deg,
+    var(--color-primary-light) 0%,
+    var(--color-accent) 100%
+  );
+  animation: shimmer 1.5s infinite;
+}
+
+/* === Timer Variant === */
+.pixel-progress--timer .pixel-progress__fill {
+  background-color: var(--color-primary-light);
+}
+
+.pixel-progress--timer[data-warning="true"] .pixel-progress__fill {
+  background-color: var(--color-hp-medium);
+}
+
+.pixel-progress--timer[data-critical="true"] .pixel-progress__fill {
+  background-color: var(--color-hp-low);
+  animation: pulse-critical 0.5s var(--ease-linear) infinite;
+}
+
+/* === Segmented Style (Pixel Look) === */
+.pixel-progress--segmented {
+  background: repeating-linear-gradient(
+    90deg,
+    var(--color-surface) 0,
+    var(--color-surface) 8px,
+    var(--color-border) 8px,
+    var(--color-border) 10px
+  );
+}
+
+.pixel-progress--segmented .pixel-progress__fill {
+  background: repeating-linear-gradient(
+    90deg,
+    currentColor 0,
+    currentColor 8px,
+    transparent 8px,
+    transparent 10px
+  );
+}
+
+/* === Animated === */
+.pixel-progress--animated .pixel-progress__fill {
+  transition: width var(--duration-normal) var(--ease-bounce);
+}
+
+/* === Striped === */
+.pixel-progress--striped .pixel-progress__fill {
+  background-image: linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.1) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.1) 50%,
+    rgba(255, 255, 255, 0.1) 75%,
+    transparent 75%,
+    transparent
+  );
+  background-size: 16px 16px;
+  animation: progress-stripe 1s linear infinite;
+}
+
+@keyframes progress-stripe {
+  0% { background-position: 0 0; }
+  100% { background-position: 16px 0; }
+}

@@ -1,0 +1,192 @@
+/* 
+ * Button Component
+ * .pixel-btn
+ */
+
+.pixel-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  text-decoration: none;
+  border: var(--border-normal) solid var(--color-border);
+  border-radius: var(--radius-none);
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-step);
+  image-rendering: pixelated;
+  
+  /* Pixel box shadow effect */
+  box-shadow: 
+    4px 4px 0 var(--color-primary-dark),
+    inset -2px -2px 0 rgba(0, 0, 0, 0.2),
+    inset 2px 2px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* === Size Variants === */
+.pixel-btn--sm {
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--text-xs);
+  min-height: 32px;
+}
+
+.pixel-btn--md {
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--text-sm);
+  min-height: 40px;
+}
+
+.pixel-btn--lg {
+  padding: var(--space-3) var(--space-5);
+  font-size: var(--text-base);
+  min-height: 48px;
+}
+
+/* === Color Variants === */
+
+/* Primary (Default) */
+.pixel-btn,
+.pixel-btn--primary {
+  background-color: var(--color-primary);
+  color: var(--color-text-primary);
+  border-color: var(--color-primary-light);
+}
+
+.pixel-btn--primary:hover,
+.pixel-btn:hover {
+  background-color: var(--color-primary-light);
+  transform: translate(-2px, -2px);
+  box-shadow: 
+    6px 6px 0 var(--color-primary-dark),
+    inset -2px -2px 0 rgba(0, 0, 0, 0.2),
+    inset 2px 2px 0 rgba(255, 255, 255, 0.1);
+}
+
+.pixel-btn--primary:active,
+.pixel-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 
+    2px 2px 0 var(--color-primary-dark),
+    inset -2px -2px 0 rgba(0, 0, 0, 0.2),
+    inset 2px 2px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* Secondary */
+.pixel-btn--secondary {
+  background-color: var(--color-surface);
+  color: var(--color-text-primary);
+  border-color: var(--color-border);
+}
+
+.pixel-btn--secondary:hover {
+  background-color: var(--color-primary-dark);
+  border-color: var(--color-primary-light);
+  transform: translate(-2px, -2px);
+  box-shadow: 
+    6px 6px 0 var(--color-shadow),
+    inset -2px -2px 0 rgba(0, 0, 0, 0.2),
+    inset 2px 2px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* Danger */
+.pixel-btn--danger {
+  background-color: var(--color-negative);
+  color: var(--color-text-primary);
+  border-color: var(--color-negative-dark);
+}
+
+.pixel-btn--danger:hover {
+  background-color: var(--color-negative-dark);
+  transform: translate(-2px, -2px);
+  box-shadow: 
+    6px 6px 0 rgba(153, 27, 27, 0.8),
+    inset -2px -2px 0 rgba(0, 0, 0, 0.2),
+    inset 2px 2px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* Ghost */
+.pixel-btn--ghost {
+  background-color: transparent;
+  color: var(--color-text-primary);
+  border-color: var(--color-border);
+  box-shadow: none;
+}
+
+.pixel-btn--ghost:hover {
+  background-color: var(--color-surface);
+  border-color: var(--color-border-accent);
+  transform: none;
+  box-shadow: 0 0 8px var(--color-glow-accent);
+}
+
+/* Accent */
+.pixel-btn--accent {
+  background-color: var(--color-accent);
+  color: var(--color-background);
+  border-color: #b8860b;
+}
+
+.pixel-btn--accent:hover {
+  background-color: #ffed4a;
+  transform: translate(-2px, -2px);
+  box-shadow: 
+    6px 6px 0 #b8860b,
+    inset -2px -2px 0 rgba(0, 0, 0, 0.2),
+    inset 2px 2px 0 rgba(255, 255, 255, 0.3);
+}
+
+/* === States === */
+
+.pixel-btn:disabled,
+.pixel-btn--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+  transform: none;
+  box-shadow: 2px 2px 0 var(--color-shadow);
+}
+
+.pixel-btn--loading {
+  position: relative;
+  color: transparent;
+}
+
+.pixel-btn--loading::after {
+  content: "";
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--color-text-primary);
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* === Full Width === */
+.pixel-btn--full {
+  width: 100%;
+}
+
+/* === Icon Button === */
+.pixel-btn--icon {
+  padding: var(--space-2);
+  min-width: 40px;
+}
+
+.pixel-btn--icon.pixel-btn--sm {
+  padding: var(--space-1);
+  min-width: 32px;
+}
+
+.pixel-btn--icon.pixel-btn--lg {
+  padding: var(--space-3);
+  min-width: 48px;
+}

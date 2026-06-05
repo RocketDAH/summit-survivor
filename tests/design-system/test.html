@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>픽셀 디자인 시스템 - 컴포넌트 테스트</title>
+  <link rel="stylesheet" href="../../design-system/index.css">
+  <style>
+    body {
+      background-color: var(--color-background);
+      color: var(--color-text-primary);
+      padding: 32px;
+      font-family: var(--font-body);
+    }
+    .section {
+      margin-bottom: 48px;
+    }
+    .section-title {
+      font-family: var(--font-display);
+      font-size: var(--text-lg);
+      color: var(--color-accent);
+      margin-bottom: 24px;
+      border-bottom: 2px solid var(--color-border);
+      padding-bottom: 8px;
+    }
+    .component-row {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+    .color-swatch {
+      width: 64px;
+      height: 64px;
+      border: 2px solid var(--color-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .color-label {
+      font-size: var(--text-xs);
+      margin-top: 4px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <h1 class="pixel-text-display pixel-text-2xl pixel-text-accent pixel-mb-6">
+    픽셀 디자인 시스템 테스트
+  </h1>
+
+  <!-- Colors -->
+  <section class="section">
+    <h2 class="section-title">색상 팔레트</h2>
+    <div class="component-row">
+      <div>
+        <div class="color-swatch" style="background-color: var(--color-primary)"></div>
+        <p class="color-label">Primary</p>
+      </div>
+      <div>
+        <div class="color-swatch" style="background-color: var(--color-secondary)"></div>
+        <p class="color-label">Secondary</p>
+      </div>
+      <div>
+        <div class="color-swatch" style="background-color: var(--color-accent)"></div>
+        <p class="color-label">Accent</p>
+      </div>
+      <div>
+        <div class="color-swatch" style="background-color: var(--color-positive)"></div>
+        <p class="color-label">Positive</p>
+      </div>
+      <div>
+        <div class="color-swatch" style="background-color: var(--color-negative)"></div>
+        <p class="color-label">Negative</p>
+      </div>
+      <div>
+        <div class="color-swatch" style="background-color: var(--color-random)"></div>
+        <p class="color-label">Random</p>
+      </div>
+    </div>
+    <div class="component-row">
+      <div>
+        <div class="color-swatch" style="background-color: var(--color-hp-high)"></div>
+        <p class="color-label">HP High</p>
+      </div>
+      <div>
+        <div class="color-swatch" style="background-color: var(--color-hp-medium)"></div>
+        <p class="color-label">HP Medium</p>
+      </div>
+      <div>
+        <div class="color-swatch" style="background-color: var(--color-hp-low)"></div>
+        <p class="color-label">HP Low</p>
+      </div>
+      <div>
+        <div class="color-swatch" style="background-color: var(--color-hp-critical)"></div>
+        <p class="color-label">HP Critical</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Typography -->
+  <section class="section">
+    <h2 class="section-title">타이포그래피</h2>
+    <p class="pixel-text-display pixel-text-2xl pixel-mb-2">Display Text (Press Start 2P)</p>
+    <p class="pixel-text-body pixel-text-lg pixel-mb-2">Body Text (VT323)</p>
+    <p class="pixel-text-korean pixel-text-lg pixel-mb-2">한글 텍스트 (둥근모꼴)</p>
+    <p class="pixel-text-number pixel-text-xl pixel-mb-2">12345 - Tabular Numbers</p>
+  </section>
+
+  <!-- Buttons -->
+  <section class="section">
+    <h2 class="section-title">버튼</h2>
+    <div class="component-row">
+      <button class="pixel-btn pixel-btn--primary">Primary</button>
+      <button class="pixel-btn pixel-btn--secondary">Secondary</button>
+      <button class="pixel-btn pixel-btn--danger">Danger</button>
+      <button class="pixel-btn pixel-btn--ghost">Ghost</button>
+      <button class="pixel-btn pixel-btn--accent">Accent</button>
+    </div>
+    <div class="component-row">
+      <button class="pixel-btn pixel-btn--primary pixel-btn--sm">Small</button>
+      <button class="pixel-btn pixel-btn--primary pixel-btn--md">Medium</button>
+      <button class="pixel-btn pixel-btn--primary pixel-btn--lg">Large</button>
+    </div>
+    <div class="component-row">
+      <button class="pixel-btn pixel-btn--primary" disabled>Disabled</button>
+    </div>
+  </section>
+
+  <!-- Progress Bars -->
+  <section class="section">
+    <h2 class="section-title">프로그레스 바</h2>
+    <div style="max-width: 400px;">
+      <p class="pixel-text-sm pixel-text-secondary pixel-mb-2">HP High (80%+)</p>
+      <div class="pixel-progress pixel-progress--hp pixel-mb-4" data-hp-state="high">
+        <div class="pixel-progress__fill" style="width: 85%"></div>
+        <span class="pixel-progress__label">85</span>
+      </div>
+      
+      <p class="pixel-text-sm pixel-text-secondary pixel-mb-2">HP Medium (40-79%)</p>
+      <div class="pixel-progress pixel-progress--hp pixel-mb-4" data-hp-state="medium">
+        <div class="pixel-progress__fill" style="width: 55%"></div>
+        <span class="pixel-progress__label">55</span>
+      </div>
+      
+      <p class="pixel-text-sm pixel-text-secondary pixel-mb-2">HP Low (20-39%)</p>
+      <div class="pixel-progress pixel-progress--hp pixel-mb-4" data-hp-state="low">
+        <div class="pixel-progress__fill" style="width: 30%"></div>
+        <span class="pixel-progress__label">30</span>
+      </div>
+      
+      <p class="pixel-text-sm pixel-text-secondary pixel-mb-2">HP Critical (&lt;20%)</p>
+      <div class="pixel-progress pixel-progress--hp pixel-mb-4" data-hp-state="critical">
+        <div class="pixel-progress__fill" style="width: 15%"></div>
+        <span class="pixel-progress__label">15</span>
+      </div>
+      
+      <p class="pixel-text-sm pixel-text-secondary pixel-mb-2">Altitude</p>
+      <div class="pixel-progress pixel-progress--altitude pixel-mb-4">
+        <div class="pixel-progress__fill" style="width: 65%"></div>
+        <span class="pixel-progress__label">1950m</span>
+      </div>
+      
+      <p class="pixel-text-sm pixel-text-secondary pixel-mb-2">Timer</p>
+      <div class="pixel-progress pixel-progress--timer pixel-mb-4">
+        <div class="pixel-progress__fill" style="width: 45%"></div>
+        <span class="pixel-progress__label">0:54</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Cards -->
+  <section class="section">
+    <h2 class="section-title">카드</h2>
+    <div class="component-row">
+      <div class="pixel-card pixel-card--item" data-type="positive">
+        <div class="pixel-card__icon">✨</div>
+        <div class="pixel-card__name">비상식량</div>
+        <div class="pixel-card__effect pixel-card__effect--positive">+15 HP</div>
+      </div>
+      <div class="pixel-card pixel-card--item" data-type="negative">
+        <div class="pixel-card__icon">⚠️</div>
+        <div class="pixel-card__name">낙석</div>
+        <div class="pixel-card__effect pixel-card__effect--negative">-20 HP</div>
+      </div>
+      <div class="pixel-card pixel-card--item" data-type="random">
+        <div class="pixel-card__icon">❓</div>
+        <div class="pixel-card__name">보물상자</div>
+        <div class="pixel-card__effect">??? HP</div>
+      </div>
+    </div>
+    <div class="component-row">
+      <div class="pixel-card pixel-card--panel" style="max-width: 300px;">
+        <div class="pixel-card__header">
+          <h3 class="pixel-card__title">패널 카드</h3>
+        </div>
+        <div class="pixel-card__body">
+          이것은 패널 형태의 카드입니다.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Animations -->
+  <section class="section">
+    <h2 class="section-title">애니메이션</h2>
+    <div class="component-row">
+      <div class="pixel-card pixel-card--item pixel-animate-appear" data-type="positive">
+        <div class="pixel-card__name">Appear</div>
+      </div>
+      <div class="pixel-card pixel-card--item pixel-animate-pulse-critical" data-type="negative">
+        <div class="pixel-card__name">Pulse</div>
+      </div>
+      <div class="pixel-card pixel-card--item pixel-animate-bounce" data-type="random">
+        <div class="pixel-card__name">Bounce</div>
+      </div>
+    </div>
+    <div class="component-row">
+      <button class="pixel-btn pixel-btn--accent pixel-animate-victory">Victory</button>
+    </div>
+  </section>
+
+  <!-- Tooltips -->
+  <section class="section">
+    <h2 class="section-title">툴팁</h2>
+    <div class="component-row">
+      <div class="pixel-tooltip pixel-tooltip--top">
+        <button class="pixel-btn pixel-btn--secondary">Hover me (Top)</button>
+        <div class="pixel-tooltip__content">위쪽 툴팁</div>
+      </div>
+      <div class="pixel-tooltip pixel-tooltip--bottom">
+        <button class="pixel-btn pixel-btn--secondary">Hover me (Bottom)</button>
+        <div class="pixel-tooltip__content">아래쪽 툴팁</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Spacing Test -->
+  <section class="section">
+    <h2 class="section-title">스페이싱 (8px 그리드)</h2>
+    <div style="display: flex; gap: 4px; align-items: flex-end;">
+      <div style="width: 16px; height: 8px; background: var(--color-primary);" title="8px"></div>
+      <div style="width: 16px; height: 16px; background: var(--color-primary);" title="16px"></div>
+      <div style="width: 16px; height: 24px; background: var(--color-primary);" title="24px"></div>
+      <div style="width: 16px; height: 32px; background: var(--color-primary);" title="32px"></div>
+      <div style="width: 16px; height: 48px; background: var(--color-primary);" title="48px"></div>
+      <div style="width: 16px; height: 64px; background: var(--color-primary);" title="64px"></div>
+    </div>
+  </section>
+
+  <!-- WCAG Contrast Test -->
+  <section class="section">
+    <h2 class="section-title">접근성 - 색상 대비</h2>
+    <div class="component-row">
+      <div style="background: var(--color-background); color: var(--color-text-primary); padding: 16px; border: 1px solid var(--color-border);">
+        Primary Text on Background
+      </div>
+      <div style="background: var(--color-surface); color: var(--color-text-primary); padding: 16px; border: 1px solid var(--color-border);">
+        Primary Text on Surface
+      </div>
+      <div style="background: var(--color-background); color: var(--color-text-secondary); padding: 16px; border: 1px solid var(--color-border);">
+        Secondary Text on Background
+      </div>
+    </div>
+  </section>
+
+</body>
+</html>

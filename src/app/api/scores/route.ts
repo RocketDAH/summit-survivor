@@ -1,9 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase";
+import { getSupabase, isSupabaseConfigured } from "@/lib/supabase";
 import { ScoreSubmission, ApiResponse, SubmitScoreResponse } from "@/types/api";
+
+export const dynamic = "force-dynamic";
 
 export async function POST(request: NextRequest) {
   try {
+    if (!isSupabaseConfigured()) {
+      return NextResponse.json<ApiResponse<never>>(
+        { success: false, error: "Leaderboard service unavailable" },
+        { status: 503 }
+      );
+    }
+
+    const supabase = getSupabase();
     const body: ScoreSubmission = await request.json();
 
     // Validate input

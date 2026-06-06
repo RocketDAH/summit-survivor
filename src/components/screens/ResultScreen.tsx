@@ -216,6 +216,14 @@ export function ResultScreen() {
             리더보드
           </Link>
         </div>
+
+        {/* Asset credits */}
+        <p
+          className="pixel-text-xs pixel-text-center pixel-mt-4"
+          style={{ color: "var(--color-text-secondary)", opacity: 0.7 }}
+        >
+          아트: Kenney (CC0) · kenney.nl
+        </p>
       </div>
     </div>
   );

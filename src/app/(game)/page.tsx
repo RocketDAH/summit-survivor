@@ -8,11 +8,21 @@ import { EventDisplay } from "@/components/game/EventDisplay";
 import { ResultScreen } from "@/components/screens/ResultScreen";
 import { BuffSidebar, BuffSidebarCompact } from "@/components/game/BuffSidebar";
 import { ComboIndicatorCompact } from "@/components/game/ComboIndicator";
+import { FEATURES } from "@/lib/featureFlags";
+import { RedesignGame } from "@/components/game/RedesignGame";
 
 export default function GamePage() {
+  // 리디자인 플래그가 켜지면 새 시스템으로 분기 (기본값 꺼짐 → 기존 게임 그대로)
+  if (FEATURES.redesign) {
+    return <RedesignGame />;
+  }
+  return <LegacyGamePage />;
+}
+
+function LegacyGamePage() {
   const status = useGameStore((state) => state.status);
   const useMemeSystem = useGameStore((state) => state.useMemeSystem);
-  
+
   // Initialize game loop
   useGameLoop();
 

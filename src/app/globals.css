@@ -17,3 +17,9 @@ body {
 * {
   box-sizing: border-box;
 }
+
+/* Crisp pixel-art rendering for all sprite images (Kenney CC0 assets) */
+.pixelated {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}

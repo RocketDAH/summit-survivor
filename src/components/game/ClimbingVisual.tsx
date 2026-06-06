@@ -1,123 +1,155 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useGameStore } from "@/stores/gameStore";
 import { calculatePercentage } from "@/lib/score";
 import { getHpState } from "@/types/game";
+
+// Kenney "Pixel Platformer" (CC0) sprite paths — see public/assets/kenney/LICENSE-*.txt
+const SPRITES = {
+  climberIdle: "/assets/kenney/character/climber-idle.png",
+  climberWalk: "/assets/kenney/character/climber-walk.png",
+  snowGround: "/assets/kenney/tiles/snow-ground.png",
+  pine: "/assets/kenney/tiles/pine.png",
+  flag: "/assets/kenney/tiles/flag.png",
+  gem: "/assets/kenney/tiles/gem.png",
+};
+
+// Pixel sprite <img> with crisp scaling
+function Sprite({
+  src,
+  size,
+  className,
+  style,
+}: {
+  src: string;
+  size: number;
+  className?: string;
+  style?: React.CSSProperties;
+}) {
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={src}
+      alt=""
+      className={`pixelated ${className ?? ""}`}
+      style={{ width: size, height: size, ...style }}
+      draggable={false}
+    />
+  );
+}
 
 export function ClimbingVisual() {
   const altitude = useGameStore((state) => state.altitude);
   const targetAltitude = useGameStore((state) => state.targetAltitude);
   const hp = useGameStore((state) => state.hp);
   const maxHp = useGameStore((state) => state.maxHp);
+  const status = useGameStore((state) => state.status);
 
   const progress = calculatePercentage(altitude, targetAltitude);
   const hpState = getHpState(hp, maxHp);
-  
-  const climberPosition = useMemo(() => {
-    return Math.min(85, progress * 0.85);
-  }, [progress]);
 
-  const mountainLayers = useMemo(() => {
-    const layers = [];
-    for (let i = 0; i < 5; i++) {
-      layers.push({
-        id: i,
-        opacity: 0.3 + (i * 0.15),
-        yOffset: 20 - (i * 4),
-      });
-    }
-    return layers;
-  }, []);
+  // Climber rises from 8% to 86% as altitude approaches the summit
+  const climberBottom = useMemo(() => 8 + progress * 0.78, [progress]);
+
+  // Two-frame walk animation while playing
+  const [walkFrame, setWalkFrame] = useState(false);
+  useEffect(() => {
+    if (status !== "playing") return;
+    const id = setInterval(() => setWalkFrame((f) => !f), 220);
+    return () => clearInterval(id);
+  }, [status]);
+  const climberSrc =
+    status === "playing" && walkFrame ? SPRITES.climberWalk : SPRITES.climberIdle;
+
+  // Decorative pine trees scattered up the slope (deterministic, no per-render jitter)
+  const pines = useMemo(
+    () => [
+      { left: 12, bottom: 6, size: 22 },
+      { left: 72, bottom: 10, size: 26 },
+      { left: 34, bottom: 30, size: 18 },
+      { left: 82, bottom: 44, size: 20 },
+      { left: 18, bottom: 58, size: 16 },
+    ],
+    []
+  );
 
   return (
-    <div 
+    <div
       className="pixel-relative pixel-overflow-hidden pixel-mb-4"
       style={{
         height: "200px",
-        background: "linear-gradient(180deg, var(--color-primary-dark) 0%, var(--color-primary) 50%, var(--color-primary-light) 100%)",
+        background:
+          "linear-gradient(180deg, #1a2740 0%, #3b5a82 45%, #7fa9c7 80%, #cfe6f0 100%)",
         borderRadius: "var(--radius-md)",
         border: "2px solid var(--color-border)",
       }}
     >
-      {/* Stars */}
+      {/* Stars (upper sky only) */}
       <div className="pixel-absolute pixel-inset-0" style={{ overflow: "hidden" }}>
-        {[...Array(20)].map((_, i) => (
+        {[...Array(16)].map((_, i) => (
           <div
             key={i}
             className="pixel-absolute"
             style={{
               width: "2px",
               height: "2px",
-              backgroundColor: "var(--color-secondary)",
-              opacity: 0.5 + Math.random() * 0.5,
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 40}%`,
+              backgroundColor: "#ffffff",
+              opacity: 0.4 + (i % 5) * 0.12,
+              left: `${(i * 37) % 100}%`,
+              top: `${(i * 23) % 38}%`,
             }}
           />
         ))}
       </div>
 
-      {/* Mountain layers */}
-      {mountainLayers.map((layer) => (
-        <div
-          key={layer.id}
+      {/* Snowy mountain silhouette */}
+      <div
+        className="pixel-absolute"
+        style={{ bottom: 0, left: 0, right: 0, height: "78%" }}
+      >
+        <svg viewBox="0 0 100 50" preserveAspectRatio="none" style={{ width: "100%", height: "100%" }}>
+          <polygon points="0,50 18,18 32,30 52,6 72,26 88,14 100,50" fill="#5b6b87" opacity="0.5" />
+          <polygon points="0,50 24,26 44,34 60,16 78,30 100,22 100,50" fill="#6f7e99" opacity="0.7" />
+          {/* snow caps */}
+          <polygon points="52,6 46,14 58,14" fill="#eaf4fb" />
+          <polygon points="18,18 13,26 24,26" fill="#eaf4fb" />
+        </svg>
+      </div>
+
+      {/* Decorative pines */}
+      {pines.map((p, i) => (
+        <Sprite
+          key={i}
+          src={SPRITES.pine}
+          size={p.size}
           className="pixel-absolute"
-          style={{
-            bottom: `${layer.yOffset}%`,
-            left: "-10%",
-            right: "-10%",
-            height: "80%",
-            opacity: layer.opacity,
-          }}
-        >
-          <svg viewBox="0 0 100 50" preserveAspectRatio="none" style={{ width: "100%", height: "100%" }}>
-            <polygon
-              points="0,50 15,20 30,35 50,5 70,30 85,15 100,50"
-              fill="var(--color-surface)"
-            />
-          </svg>
-        </div>
+          style={{ left: `${p.left}%`, bottom: `${p.bottom}%`, opacity: 0.85 }}
+        />
       ))}
 
-      {/* Snow caps */}
+      {/* Ground line of snow tiles */}
       <div
         className="pixel-absolute"
         style={{
-          top: "10%",
-          left: "45%",
-          width: "20px",
-          height: "15px",
-          background: "var(--color-secondary)",
-          clipPath: "polygon(50% 0%, 0% 100%, 100% 100%)",
-          opacity: 0.9,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          height: "22px",
+          backgroundImage: `url(${SPRITES.snowGround})`,
+          backgroundSize: "22px 22px",
+          backgroundRepeat: "repeat-x",
+          imageRendering: "pixelated",
         }}
       />
 
       {/* Summit flag */}
-      <div
-        className="pixel-absolute pixel-flex pixel-flex-col pixel-items-center"
-        style={{
-          top: "8%",
-          left: "48%",
-        }}
-      >
-        <div
-          style={{
-            width: "12px",
-            height: "8px",
-            backgroundColor: "var(--color-accent)",
-            marginBottom: "-1px",
-          }}
-        />
-        <div
-          style={{
-            width: "2px",
-            height: "12px",
-            backgroundColor: "var(--color-secondary)",
-          }}
-        />
-      </div>
+      <Sprite
+        src={SPRITES.flag}
+        size={24}
+        className="pixel-absolute"
+        style={{ top: "6%", left: "49%" }}
+      />
 
       {/* Altitude markers */}
       {[1000, 2000, 3000].map((marker) => (
@@ -126,7 +158,7 @@ export function ClimbingVisual() {
           className="pixel-absolute pixel-flex pixel-items-center"
           style={{
             right: "8px",
-            bottom: `${(marker / targetAltitude) * 75 + 10}%`,
+            bottom: `${(marker / targetAltitude) * 72 + 10}%`,
             opacity: altitude >= marker - 200 ? 1 : 0.4,
           }}
         >
@@ -149,92 +181,27 @@ export function ClimbingVisual() {
         </div>
       ))}
 
-      {/* Climber */}
+      {/* Climber sprite */}
       <div
-        className={`pixel-absolute pixel-transition-slow ${
-          hpState === "critical" ? "pixel-animate-pulse-critical" : ""
-        }`}
+        className={`pixel-absolute ${hpState === "critical" ? "pixel-animate-pulse-critical" : ""}`}
         style={{
-          left: "20%",
-          bottom: `${climberPosition + 5}%`,
+          left: "22%",
+          bottom: `${climberBottom}%`,
           transform: "translateX(-50%)",
           transition: "bottom 0.3s ease-out",
+          filter:
+            hpState === "critical"
+              ? "drop-shadow(0 0 4px var(--color-negative))"
+              : "drop-shadow(0 1px 1px rgba(0,0,0,0.4))",
         }}
       >
-        {/* Climber body */}
-        <div className="pixel-flex pixel-flex-col pixel-items-center">
-          {/* Head */}
-          <div
-            style={{
-              width: "8px",
-              height: "8px",
-              backgroundColor: "#FFD5B5",
-              borderRadius: "2px",
-            }}
-          />
-          {/* Body */}
-          <div
-            style={{
-              width: "10px",
-              height: "12px",
-              backgroundColor: hpState === "critical" ? "var(--color-negative)" : 
-                             hpState === "low" ? "var(--color-hp-low)" :
-                             "var(--color-positive)",
-              marginTop: "-1px",
-            }}
-          />
-          {/* Legs */}
-          <div className="pixel-flex" style={{ marginTop: "-1px", gap: "2px" }}>
-            <div
-              style={{
-                width: "4px",
-                height: "6px",
-                backgroundColor: "var(--color-primary-dark)",
-              }}
-            />
-            <div
-              style={{
-                width: "4px",
-                height: "6px",
-                backgroundColor: "var(--color-primary-dark)",
-              }}
-            />
-          </div>
-          {/* Backpack */}
-          <div
-            className="pixel-absolute"
-            style={{
-              width: "6px",
-              height: "8px",
-              backgroundColor: "var(--color-random)",
-              right: "-4px",
-              top: "8px",
-            }}
-          />
-        </div>
+        <Sprite src={climberSrc} size={40} />
       </div>
-
-      {/* Trail */}
-      <div
-        className="pixel-absolute"
-        style={{
-          left: "20%",
-          bottom: "5%",
-          width: "2px",
-          height: `${climberPosition}%`,
-          background: `linear-gradient(to top, transparent, var(--color-accent))`,
-          opacity: 0.5,
-        }}
-      />
 
       {/* Current altitude display */}
       <div
         className="pixel-absolute pixel-text-center"
-        style={{
-          bottom: "8px",
-          left: "50%",
-          transform: "translateX(-50%)",
-        }}
+        style={{ bottom: "26px", left: "50%", transform: "translateX(-50%)" }}
       >
         <span className="pixel-text-number pixel-text-lg pixel-text-accent pixel-text-shadow">
           {Math.floor(altitude).toLocaleString()}m

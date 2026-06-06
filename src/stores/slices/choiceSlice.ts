@@ -4,23 +4,23 @@ import {
   SliceCreator,
   ChoiceSlice,
   ChoiceCard,
+  EquipmentDef,
   REDESIGN_CONSTANTS as C,
 } from "@/types/redesign";
+import { generateBuildCards, STAT_CARRIER_ID } from "@/lib/buildCards";
 
 export const createChoiceSlice: SliceCreator<ChoiceSlice> = (set, get) => ({
   openChoice: null,
   isPaused: false,
   nextChoiceAltitude: C.CHOICE_INTERVAL_M, // 첫 마일스톤 500m
 
-  // 마일스톤 도달 감지는 구현(배관). 카드 "생성"은 데이터/가중 로직 → TODO(B).
+  // 마일스톤 도달 시 카드 3장 생성 후 게임 멈춤.
   maybeOpenChoice: (altitude) => {
     if (get().openChoice) return; // 이미 열려 있음
     if (altitude < get().nextChoiceAltitude) return;
 
-    // TODO(B): data/redesign/equipment.ts 에서 빈 슬롯/하위 티어 우선 가중으로
-    //   장비 80% / 스탯 20% 카드 3장 생성. (design.md §5.1)
-    //   const cards = generateBuildCards(get().equipped, get().getDerivedStats());
-    const cards: ChoiceCard[] = []; // 임시: 빈 배열 → UI는 "구현 예정" 표시
+    // 빈 슬롯/하위 티어 가중으로 장비 80% / 스탯 20% 3장 생성 (design.md §5.1)
+    const cards = generateBuildCards(get().equipped, get().getDerivedStats());
 
     set({
       openChoice: cards,
@@ -37,7 +37,22 @@ export const createChoiceSlice: SliceCreator<ChoiceSlice> = (set, get) => ({
       if (card.kind === "equipment" && card.equipment) {
         get().equip(card.equipment); // 장비 적용은 equipmentSlice 계약 사용
       } else if (card.kind === "stat" && card.stat) {
-        // TODO(B): 스탯 카드 적용(최대HP/속도 즉시 증가). 캡/파생 반영 방식 합의 필요.
+        // 스탯 카드(최대HP/속도 +N)를 누적해 accessory 슬롯의 합성 장비로 운반한다.
+        // getDerivedStats(소유: A)가 equipped 의 maxHpBonus/speedBonus 를 합산하므로
+        // equip() 한 번으로 영구 반영(최대HP 증가 시 현재HP도 자동 +).
+        // 근거: lib/buildCards.ts 의 STAT_CARRIER_ID 주석.
+        const existing = get().equipped.accessory;
+        const base = existing?.id === STAT_CARRIER_ID ? existing : undefined;
+        const carrier: EquipmentDef = {
+          id: STAT_CARRIER_ID,
+          name: "스탯 보너스",
+          slot: "accessory",
+          tier: 1, // 점수의 장비보너스에서는 id로 제외
+          maxHpBonus: (base?.maxHpBonus ?? 0) + (card.stat.maxHp ?? 0),
+          speedBonus: (base?.speedBonus ?? 0) + (card.stat.speed ?? 0),
+          icon: "📈",
+        };
+        get().equip(carrier);
       }
     }
     set({ openChoice: null, isPaused: false }); // 선택 종료 → 게임 재개

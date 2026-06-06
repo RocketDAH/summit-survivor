@@ -4,6 +4,7 @@ import { useGameStore } from "@/stores/gameStore";
 import { useGameLoop } from "@/hooks/useGameLoop";
 import { MainScreen } from "@/components/screens/MainScreen";
 import { StatusBar } from "@/components/game/StatusBar";
+import { ClimbingVisual } from "@/components/game/ClimbingVisual";
 import { EventDisplay } from "@/components/game/EventDisplay";
 import { ResultScreen } from "@/components/screens/ResultScreen";
 import { BuffSidebar, BuffSidebarCompact } from "@/components/game/BuffSidebar";
@@ -49,7 +50,8 @@ function LegacyGamePage() {
                 <BuffSidebarCompact />
               </div>
             )}
-            
+
+            <ClimbingVisual />
             <EventDisplay />
           </div>
           

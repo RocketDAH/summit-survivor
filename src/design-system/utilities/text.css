@@ -1,0 +1,69 @@
+/* 
+ * Text Utilities
+ * 픽셀 텍스트 유틸리티 클래스
+ */
+
+/* === Display Text (제목, 점수) === */
+.pixel-text-display {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  line-height: var(--leading-tight);
+}
+
+/* === Body Text (본문, 설명) === */
+.pixel-text-body {
+  font-family: var(--font-body);
+  font-weight: 400;
+  letter-spacing: var(--tracking-normal);
+  line-height: var(--leading-normal);
+}
+
+/* === Korean Text === */
+.pixel-text-korean {
+  font-family: var(--font-korean);
+  font-weight: 400;
+  letter-spacing: var(--tracking-normal);
+  line-height: var(--leading-normal);
+}
+
+/* === Number Text (타이머, HP, 점수) === */
+.pixel-text-number {
+  font-family: var(--font-display);
+  font-variant-numeric: tabular-nums;
+  font-weight: 400;
+  letter-spacing: var(--tracking-tight);
+}
+
+/* === Size Variants === */
+.pixel-text-xs { font-size: var(--text-xs); }
+.pixel-text-sm { font-size: var(--text-sm); }
+.pixel-text-base { font-size: var(--text-base); }
+.pixel-text-lg { font-size: var(--text-lg); }
+.pixel-text-xl { font-size: var(--text-xl); }
+.pixel-text-2xl { font-size: var(--text-2xl); }
+.pixel-text-3xl { font-size: var(--text-3xl); }
+
+/* === Color Variants === */
+.pixel-text-primary { color: var(--color-text-primary); }
+.pixel-text-secondary { color: var(--color-text-secondary); }
+.pixel-text-disabled { color: var(--color-text-disabled); }
+.pixel-text-accent { color: var(--color-accent); }
+.pixel-text-positive { color: var(--color-positive); }
+.pixel-text-negative { color: var(--color-negative); }
+.pixel-text-random { color: var(--color-random); }
+
+/* === Text Alignment === */
+.pixel-text-left { text-align: left; }
+.pixel-text-center { text-align: center; }
+.pixel-text-right { text-align: right; }
+
+/* === Text Shadow (Pixel Style) === */
+.pixel-text-shadow {
+  text-shadow: 2px 2px 0 var(--color-shadow);
+}
+
+.pixel-text-shadow-glow {
+  text-shadow: 0 0 8px var(--color-glow-accent);
+}

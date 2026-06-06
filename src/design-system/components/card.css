@@ -1,0 +1,174 @@
+/* 
+ * Card Component
+ * .pixel-card
+ */
+
+.pixel-card {
+  position: relative;
+  background-color: var(--color-surface);
+  border: var(--border-normal) solid var(--color-border);
+  padding: var(--space-4);
+  
+  /* Pixel box shadow */
+  box-shadow: 
+    4px 4px 0 var(--color-shadow),
+    inset -2px -2px 0 rgba(0, 0, 0, 0.1),
+    inset 2px 2px 0 rgba(255, 255, 255, 0.05);
+}
+
+/* === Item Card Variant === */
+.pixel-card--item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  min-width: 120px;
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-step);
+}
+
+.pixel-card--item:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 
+    6px 6px 0 var(--color-shadow),
+    inset -2px -2px 0 rgba(0, 0, 0, 0.1),
+    inset 2px 2px 0 rgba(255, 255, 255, 0.05);
+}
+
+.pixel-card--item:active {
+  transform: translate(2px, 2px);
+  box-shadow: 
+    2px 2px 0 var(--color-shadow),
+    inset -2px -2px 0 rgba(0, 0, 0, 0.1),
+    inset 2px 2px 0 rgba(255, 255, 255, 0.05);
+}
+
+/* Item Type Colors */
+.pixel-card--item[data-type="positive"] {
+  border-color: var(--color-positive);
+  box-shadow: 
+    4px 4px 0 var(--color-shadow),
+    0 0 8px var(--color-glow-positive),
+    inset -2px -2px 0 rgba(0, 0, 0, 0.1),
+    inset 2px 2px 0 rgba(74, 222, 128, 0.1);
+}
+
+.pixel-card--item[data-type="negative"] {
+  border-color: var(--color-negative);
+  box-shadow: 
+    4px 4px 0 var(--color-shadow),
+    0 0 8px var(--color-glow-negative),
+    inset -2px -2px 0 rgba(0, 0, 0, 0.1),
+    inset 2px 2px 0 rgba(239, 68, 68, 0.1);
+}
+
+.pixel-card--item[data-type="random"] {
+  border-color: var(--color-random);
+  box-shadow: 
+    4px 4px 0 var(--color-shadow),
+    0 0 8px var(--color-glow-random),
+    inset -2px -2px 0 rgba(0, 0, 0, 0.1),
+    inset 2px 2px 0 rgba(168, 85, 247, 0.1);
+}
+
+/* === Result Card Variant === */
+.pixel-card--result {
+  text-align: center;
+  padding: var(--space-6);
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.pixel-card--result[data-result="victory"] {
+  border-color: var(--color-accent);
+  box-shadow: 
+    4px 4px 0 var(--color-shadow),
+    0 0 16px var(--color-glow-accent),
+    inset -2px -2px 0 rgba(0, 0, 0, 0.1),
+    inset 2px 2px 0 rgba(255, 215, 0, 0.1);
+}
+
+.pixel-card--result[data-result="defeat"] {
+  border-color: var(--color-negative);
+  filter: grayscale(20%);
+}
+
+/* === Panel Variant === */
+.pixel-card--panel {
+  padding: var(--space-3);
+}
+
+/* === Card Parts === */
+.pixel-card__header {
+  margin-bottom: var(--space-3);
+  padding-bottom: var(--space-2);
+  border-bottom: var(--border-thin) solid var(--color-border);
+}
+
+.pixel-card__title {
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.pixel-card__body {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  color: var(--color-text-secondary);
+}
+
+.pixel-card__footer {
+  margin-top: var(--space-3);
+  padding-top: var(--space-2);
+  border-top: var(--border-thin) solid var(--color-border);
+}
+
+/* === Item Card Parts === */
+.pixel-card__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+}
+
+.pixel-card__name {
+  font-family: var(--font-korean);
+  font-size: var(--text-base);
+  color: var(--color-text-primary);
+  text-align: center;
+}
+
+.pixel-card__effect {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+.pixel-card__effect--positive {
+  color: var(--color-positive);
+}
+
+.pixel-card__effect--negative {
+  color: var(--color-negative);
+}
+
+/* === Selected State === */
+.pixel-card--selected {
+  border-color: var(--color-accent);
+  box-shadow: 
+    0 0 0 2px var(--color-accent),
+    4px 4px 0 var(--color-shadow),
+    0 0 16px var(--color-glow-accent);
+}
+
+/* === Clickable === */
+.pixel-card--clickable {
+  cursor: pointer;
+}
+
+.pixel-card--clickable:hover {
+  border-color: var(--color-border-accent);
+}

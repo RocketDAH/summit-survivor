@@ -1,0 +1,43 @@
+/* 
+ * Typography Tokens
+ * 픽셀 타이포그래피 시스템
+ */
+
+/* Google Fonts Import */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap');
+
+/* DungGeunMo (둥근모꼴) - Korean Pixel Font */
+@font-face {
+  font-family: 'DungGeunMo';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/DungGeunMo.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* === Font Families === */
+  --font-display: 'Press Start 2P', monospace;
+  --font-body: 'VT323', monospace;
+  --font-korean: 'DungGeunMo', 'VT323', monospace;
+
+  /* === Font Size Scale === */
+  --text-xs: 8px;
+  --text-sm: 12px;
+  --text-base: 16px;
+  --text-lg: 20px;
+  --text-xl: 24px;
+  --text-2xl: 32px;
+  --text-3xl: 48px;
+
+  /* === Line Heights === */
+  --leading-none: 1;
+  --leading-tight: 1.25;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.75;
+
+  /* === Letter Spacing === */
+  --tracking-tight: 0;
+  --tracking-normal: 1px;
+  --tracking-wide: 2px;
+}

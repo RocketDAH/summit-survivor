@@ -1,28 +1,20 @@
-import type { Metadata } from 'next'
+import type { Metadata } from "next";
+import "@/design-system/index.css";
+import "@/app/globals.css";
 
 export const metadata: Metadata = {
-  title: 'Summit Survivor',
-  description: '2분 타임어택 생존 클리커 게임',
-}
+  title: "정상까지 | Summit Survivor",
+  description: "히말라야 정상을 향한 2분간의 생존 등반 게임",
+};
 
 export default function RootLayout({
   children,
-}: {
-  children: React.ReactNode
-}) {
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
     <html lang="ko">
-      <head>
-        <style>{`
-          @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-          }
-        `}</style>
-      </head>
-      <body style={{ margin: 0, padding: 0, fontFamily: 'monospace' }}>
-        {children}
-      </body>
+      <body>{children}</body>
     </html>
-  )
+  );
 }

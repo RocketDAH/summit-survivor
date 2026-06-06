@@ -6,23 +6,49 @@ import { MainScreen } from "@/components/screens/MainScreen";
 import { StatusBar } from "@/components/game/StatusBar";
 import { EventDisplay } from "@/components/game/EventDisplay";
 import { ResultScreen } from "@/components/screens/ResultScreen";
+import { BuffSidebar, BuffSidebarCompact } from "@/components/game/BuffSidebar";
+import { ComboIndicatorCompact } from "@/components/game/ComboIndicator";
 
 export default function GamePage() {
   const status = useGameStore((state) => state.status);
+  const useMemeSystem = useGameStore((state) => state.useMemeSystem);
   
   // Initialize game loop
   useGameLoop();
 
   return (
-    <main className="pixel-w-full pixel-min-h-screen pixel-p-4" style={{ maxWidth: "600px" }}>
+    <main className="w-full min-h-screen p-4">
       {/* Idle Screen */}
-      {status === "idle" && <MainScreen />}
+      {status === "idle" && (
+        <div className="max-w-[600px] mx-auto">
+          <MainScreen />
+        </div>
+      )}
 
       {/* Playing Screen */}
       {status === "playing" && (
-        <div className="pixel-flex pixel-flex-col">
-          <StatusBar />
-          <EventDisplay />
+        <div className="flex gap-4 max-w-[1200px] mx-auto">
+          {/* Main Game Area */}
+          <div className="flex-1 flex flex-col" style={{ maxWidth: useMemeSystem ? "800px" : "600px" }}>
+            <StatusBar />
+            
+            {/* Mobile buff/combo indicators */}
+            {useMemeSystem && (
+              <div className="md:hidden flex items-center justify-between px-4 py-2 bg-gray-800/50 rounded-lg mb-2">
+                <ComboIndicatorCompact />
+                <BuffSidebarCompact />
+              </div>
+            )}
+            
+            <EventDisplay />
+          </div>
+          
+          {/* Buff Sidebar - Desktop only */}
+          {useMemeSystem && (
+            <div className="hidden md:block">
+              <BuffSidebar />
+            </div>
+          )}
         </div>
       )}
 

@@ -1,0 +1,117 @@
+// ⭐ 기적/레어 카테고리 아이템
+import { MemeItem } from '@/types/meme-event';
+
+export const RARE_ITEMS: MemeItem[] = [
+  {
+    id: 'rare_helicopter',
+    name: '헬기 지원',
+    category: 'rare',
+    description: '"응급 수송?"',
+    effects: [{ type: 'altitude', value: 800 }],
+    weight: 0.1,
+  },
+  {
+    id: 'rare_rescue',
+    name: '구조대 발견',
+    category: 'rare',
+    description: '"살았다!"',
+    effects: [{ type: 'special', specialId: 'full_heal' }],
+    weight: 0.1,
+  },
+  {
+    id: 'rare_herb',
+    name: '신비로운 약초',
+    category: 'rare',
+    description: '"이게 산삼?"',
+    effects: [
+      { type: 'hp', value: 50 },
+      { type: 'buff', buffType: 'godlife', duration: 30 },
+    ],
+    weight: 0.15,
+  },
+  {
+    id: 'rare_spring',
+    name: '신비의 샘',
+    category: 'rare',
+    description: '"전설의 약수터"',
+    effects: [
+      { type: 'special', specialId: 'full_heal' },
+      { type: 'remove_debuff', removeCount: 'all' },
+    ],
+    weight: 0.1,
+  },
+  {
+    id: 'rare_shortcut_real',
+    name: '진짜 숏컷',
+    category: 'rare',
+    description: '"이 길 진짜네!"',
+    effects: [{ type: 'altitude', value: 600 }],
+    weight: 0.2,
+  },
+  {
+    id: 'rare_blessing',
+    name: '산신령의 축복',
+    category: 'rare',
+    description: '"오늘 나 뭔데"',
+    effects: [
+      { type: 'buff', buffType: 'godlife', duration: 20 },
+      { type: 'buff', buffType: 'hyper', duration: 20 },
+      { type: 'buff', buffType: 'shield', uses: 3 },
+    ],
+    weight: 0.05,
+  },
+  {
+    id: 'rare_weather',
+    name: '기적의 날씨',
+    category: 'rare',
+    description: '"구름이 갈라진다"',
+    effects: [{ type: 'buff', buffType: 'shield', uses: 5 }],
+    weight: 0.15,
+  },
+  {
+    id: 'rare_wings',
+    name: '날개 돋친 기분',
+    category: 'rare',
+    description: '"몸이 가볍다!"',
+    effects: [
+      { type: 'buff', buffType: 'hyper', duration: 30 },
+      { type: 'altitude', value: 300 },
+    ],
+    weight: 0.2,
+  },
+  {
+    id: 'rare_revival',
+    name: '리바이벌',
+    category: 'rare',
+    description: '"아직 안 끝났어"',
+    effects: [{ type: 'special', specialId: 'revival' }],
+    weight: 0.1,
+  },
+  {
+    id: 'rare_time',
+    name: '시간의 틈',
+    category: 'rare',
+    description: '"시계가 느려졌다?"',
+    effects: [{ type: 'special', specialId: 'time_bonus' }],
+    weight: 0.15,
+  },
+  {
+    id: 'rare_double',
+    name: '더블 찬스',
+    category: 'rare',
+    description: '"운빨존많"',
+    effects: [{ type: 'buff', buffType: 'frenzy', duration: 20 }],
+    weight: 0.2,
+  },
+  {
+    id: 'rare_immunity',
+    name: '무적 등산',
+    category: 'rare',
+    description: '"오늘 내가 산이다"',
+    effects: [
+      { type: 'buff', buffType: 'zen', duration: 15 },
+      { type: 'buff', buffType: 'shield', uses: 3 },
+    ],
+    weight: 0.15,
+  },
+];

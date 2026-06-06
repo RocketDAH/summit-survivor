@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import { useGameStore } from "@/stores/gameStore";
 import { GAME_CONSTANTS } from "@/types/game";
+import { MEME_GAME_CONSTANTS } from "@/types/meme-event";
 
 export function useGameLoop() {
   const lastTimeRef = useRef<number>(0);
@@ -27,9 +28,20 @@ export function useGameLoop() {
 
       // Generate new event if needed
       const updatedState = useGameStore.getState();
-      if (!updatedState.currentEvent) {
+      const useMemeSystem = updatedState.useMemeSystem;
+      
+      // Check if event is needed based on system type
+      const hasActiveEvent = useMemeSystem 
+        ? updatedState.currentDilemmaEvent !== null
+        : updatedState.currentEvent !== null;
+        
+      if (!hasActiveEvent) {
+        const eventInterval = useMemeSystem 
+          ? MEME_GAME_CONSTANTS.EVENT_INTERVAL 
+          : GAME_CONSTANTS.EVENT_INTERVAL;
         const eventDeltaTime = currentTime - lastEventTimeRef.current;
-        if (eventDeltaTime >= GAME_CONSTANTS.EVENT_INTERVAL * 1000 || lastEventTimeRef.current === 0) {
+        
+        if (eventDeltaTime >= eventInterval * 1000 || lastEventTimeRef.current === 0) {
           updatedState.generateEvent();
           lastEventTimeRef.current = currentTime;
         }

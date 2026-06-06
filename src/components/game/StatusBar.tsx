@@ -4,19 +4,26 @@ import { useGameStore } from "@/stores/gameStore";
 import { useTimer } from "@/hooks/useTimer";
 import { formatAltitude, calculatePercentage } from "@/lib/score";
 import { getHpState } from "@/types/game";
+import { getComboInfo } from "@/lib/combo";
+import { MEME_GAME_CONSTANTS } from "@/types/meme-event";
 
 export function StatusBar() {
   const hp = useGameStore((state) => state.hp);
   const maxHp = useGameStore((state) => state.maxHp);
   const altitude = useGameStore((state) => state.altitude);
   const targetAltitude = useGameStore((state) => state.targetAltitude);
+  const combo = useGameStore((state) => state.combo);
+  const useMemeSystem = useGameStore((state) => state.useMemeSystem);
   
   const { formattedTime, percentage: timerPercentage, isWarning, isCritical } = useTimer();
 
-  const hpPercentage = calculatePercentage(hp, maxHp);
-  const hpState = getHpState(hp, maxHp);
+  // Use meme system max HP if enabled
+  const effectiveMaxHp = useMemeSystem ? MEME_GAME_CONSTANTS.MAX_HP : maxHp;
+  const hpPercentage = calculatePercentage(hp, effectiveMaxHp);
+  const hpState = getHpState(hp, effectiveMaxHp);
   const altitudePercentage = calculatePercentage(altitude, targetAltitude);
   const nearSummit = altitudePercentage >= 90;
+  const comboInfo = getComboInfo(combo);
 
   return (
     <div className="pixel-card pixel-card--panel pixel-mb-4">

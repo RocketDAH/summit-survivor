@@ -56,10 +56,10 @@ export type GameStore = GameState & GameActions;
 
 // Game Constants
 export const GAME_CONSTANTS = {
-  MAX_HP: 100,
+  MAX_HP: 120,
   TARGET_ALTITUDE: 3000,
   TOTAL_TIME: 120, // 2 minutes in seconds
-  EVENT_INTERVAL: 2.5, // seconds (더 여유로운 선택 시간)
+  EVENT_INTERVAL: 1.5, // seconds (밈 이벤트 시스템)
   HP_DECREASE_RATE: 1, // per second
   ALTITUDE_INCREASE_RATE: 25, // per second (3000m / 120s = 25m/s)
 } as const;

@@ -2,9 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { ApiResponse, LeaderboardResponse, LeaderboardEntry } from "@/types/api";
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url);
+    const searchParams = request.nextUrl.searchParams;
     const limit = Math.min(parseInt(searchParams.get("limit") || "10"), 100);
     const offset = parseInt(searchParams.get("offset") || "0");
 
